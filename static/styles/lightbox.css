@@ -47,7 +47,7 @@
     }
 
     .exit {
-        float: right;
+        flex-shrink: 0;
 
         color: hsla(0, 0%, 100%, 0.8);
         font-size: 2rem;
@@ -69,16 +69,18 @@
 
     .image-info-wrapper {
         background-color: transparent;
+        display: flex;
+        flex-flow: row wrap;
     }
 
     .image-description,
     .image-actions {
-        float: left;
         margin: 20px;
     }
 
     .image-actions {
-        float: right;
+        flex-shrink: 0;
+        margin-left: auto;
 
         .lightbox-canvas-trigger {
             display: inline-block;
@@ -149,21 +151,21 @@
     }
 
     .image-description {
+        display: flex;
+        flex-direction: column;
+        max-width: calc(100% - 350px);
         /* add some extra margin top and remove some bottom to keep the
         height the same. and vertically center the text with the buttons. */
         margin-top: 25px;
         margin-bottom: 15px;
 
-        font-size: 1.3rem;
+        font-size: 1.1rem;
         color: hsl(0, 0%, 100%);
 
         .title {
-            display: inline-block;
             vertical-align: top;
-
             font-weight: 400;
             line-height: normal;
-            max-width: calc(100% - 110px);
 
             /* Required for text-overflow */
             white-space: nowrap;
@@ -173,8 +175,6 @@
 
         .user {
             max-width: 200px;
-            display: inline-block;
-            vertical-align: top;
             font-weight: 300;
             line-height: normal;
             text-overflow: ellipsis;
@@ -261,7 +261,8 @@
 @media only screen and ($ms_min <= width < $md_min) {
     #lightbox_overlay {
         .image-actions {
-            float: left;
+            width: 100%;
+            margin-left: 20px;
             margin-top: 0;
         }
 
@@ -271,10 +272,6 @@
             overflow: hidden;
             text-overflow: ellipsis;
             margin-bottom: 5px;
-
-            .title {
-                max-width: calc(100% - 70px);
-            }
         }
 
         .center .image-list {
@@ -289,7 +286,17 @@
         }
 
         .image-preview {
-            height: calc(100% - 101px - 95px);
+            height: calc(100% - 101px - 104px);
+        }
+
+        .image-info-wrapper {
+            align-items: flex-end;
+        }
+
+        .exit {
+            position: absolute;
+            right: 5px;
+            top: 5px;
         }
     }
 }
