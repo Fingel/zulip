@@ -1,4 +1,4 @@
-import * as hash_util from "./hash_util";
+import * as shared_hash_util from "../shared/js/hash_util";
 import {page_params} from "./page_params";
 import * as peer_data from "./peer_data";
 import * as settings_config from "./settings_config";
@@ -47,7 +47,10 @@ export function add_settings_fields(sub) {
     sub.can_access_subscribers = stream_data.can_view_subscribers(sub);
     sub.can_add_subscribers = stream_data.can_subscribe_others(sub);
 
-    sub.preview_url = hash_util.by_stream_uri(sub.stream_id);
+    sub.preview_url = shared_hash_util.by_stream_uri(
+        sub.stream_id,
+        stream_data.maybe_get_stream_name,
+    );
     sub.is_old_stream = sub.stream_weekly_traffic !== null;
 }
 

@@ -14,6 +14,7 @@ import * as compose from "./compose";
 import * as compose_fade from "./compose_fade";
 import * as condense from "./condense";
 import * as hash_util from "./hash_util";
+import * as shared_hash_util from "../shared/js/hash_util";
 import {$t} from "./i18n";
 import * as message_edit from "./message_edit";
 import * as message_lists from "./message_lists";
@@ -399,12 +400,14 @@ export class MessageListView {
                 }
 
                 if (message_container.msg.stream) {
-                    message_container.stream_url = hash_util.by_stream_uri(
+                    message_container.stream_url = shared_hash_util.by_stream_uri(
                         message_container.msg.stream_id,
+                        stream_data.maybe_get_stream_name,
                     );
-                    message_container.topic_url = hash_util.by_stream_topic_uri(
+                    message_container.topic_url = shared_hash_util.by_stream_topic_uri(
                         message_container.msg.stream_id,
                         message_container.msg.topic,
+                        stream_data.maybe_get_stream_name,
                     );
                 } else {
                     message_container.pm_with_url = message_container.msg.pm_with_url;

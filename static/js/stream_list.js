@@ -6,7 +6,7 @@ import render_stream_sidebar_row from "../templates/stream_sidebar_row.hbs";
 
 import * as blueslip from "./blueslip";
 import * as color_class from "./color_class";
-import * as hash_util from "./hash_util";
+import * as shared_hash_util from "../shared/js/hash_util";
 import * as keydown_util from "./keydown_util";
 import {ListCursor} from "./list_cursor";
 import * as narrow from "./narrow";
@@ -243,7 +243,7 @@ function build_stream_sidebar_li(sub) {
     const args = {
         name,
         id: sub.stream_id,
-        uri: hash_util.by_stream_uri(sub.stream_id),
+        uri: shared_hash_util.by_stream_uri(sub.stream_id, stream_data.maybe_get_stream_name),
         is_muted: stream_data.is_muted(sub.stream_id) === true,
         invite_only: sub.invite_only,
         is_web_public: sub.is_web_public,

@@ -1,7 +1,8 @@
-import * as hash_util from "./hash_util";
+import * as shared_hash_util from "../shared/js/hash_util";
 import * as message_edit from "./message_edit";
 import * as muted_topics from "./muted_topics";
 import * as narrow_state from "./narrow_state";
+import * as stream_data from "./stream_data";
 import * as stream_topic_history from "./stream_topic_history";
 import * as topic_list from "./topic_list";
 import * as unread from "./unread";
@@ -103,7 +104,11 @@ export function get_list_info(stream_id, zoomed) {
             is_zero: num_unread === 0,
             is_muted: is_topic_muted,
             is_active_topic,
-            url: hash_util.by_stream_topic_uri(stream_id, topic_name),
+            url: shared_hash_util.by_stream_topic_uri(
+                stream_id,
+                topic_name,
+                stream_data.maybe_get_stream_name,
+            ),
             resolved,
             resolved_topic_prefix: message_edit.RESOLVED_TOPIC_PREFIX,
         };

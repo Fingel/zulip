@@ -1,0 +1,43 @@
+diff --git a/frontend_tests/node_tests/popovers.js b/frontend_tests/node_tests/popovers.js
+index d55a7121de..e71dcf3c15 100644
+--- a/frontend_tests/node_tests/popovers.js
++++ b/frontend_tests/node_tests/popovers.js
+@@ -9,9 +9,9 @@ const $ = require("../zjsunit/zjquery");
+ const {page_params} = require("../zjsunit/zpage_params");
+ 
+ const noop = function () {};
++const shared_hash_util = zrequire("../shared/js/hash_util");
+ 
+ const rows = mock_esm("../../static/js/rows");
+-const stream_data = mock_esm("../../static/js/stream_data");
+ mock_esm("../../static/js/emoji_picker", {
+     hide_emoji_popover: noop,
+ });
+@@ -242,11 +242,16 @@ test_ui("actions_popover", ({override, override_rewire, mock_template}) => {
+ 
+     override_rewire(message_edit, "get_editability", () => 4);
+ 
+-    stream_data.id_to_slug = (stream_id) => {
++    shared_hash_util.id_to_slug = (stream_id, _) => {
+         assert.equal(stream_id, 123);
+         return "Bracket ( stream";
+     };
+ 
++    const res = shared_hash_util.id_to_slug(123, undefined);
++    console.log("result of calling patched method");
++    // this shows the expected output: "Bracket ("
++    console.log(res);
++
+     target.closest = (sel) => {
+         assert.equal(sel, ".message_row");
+         return {
+@@ -255,6 +260,9 @@ test_ui("actions_popover", ({override, override_rewire, mock_template}) => {
+     };
+ 
+     mock_template("actions_popover_content.hbs", false, (opts) => {
++        console.log("----- OPTS ------");
++        // this shows the unmocked output, "123-unknown"
++        console.log(opts);
+         // TODO: Test all the properties of the popover
+         assert.equal(
+             opts.conversation_time_uri,

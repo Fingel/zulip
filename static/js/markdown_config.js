@@ -1,4 +1,4 @@
-import * as hash_util from "./hash_util";
+import * as shared_hash_util from "../shared/js/hash_util";
 import * as people from "./people";
 import * as stream_data from "./stream_data";
 import * as user_groups from "./user_groups";
@@ -40,8 +40,18 @@ export const get_helpers = () => ({
 
     // stream hashes
     get_stream_by_name: stream_data.get_sub,
-    stream_hash: hash_util.by_stream_uri,
-    stream_topic_hash: hash_util.by_stream_topic_uri,
+    // Here we configure Markdown to use web app specific functions for looking up a stream name
+    // by id. If the Markdown code is shard with the mobile app, it will use different functions.
+    stream_hash: (stream_id) => {
+        return shared_hash_util.by_stream_uri(stream_id, stream_data.maybe_get_stream_name);
+    },
+    stream_topic_hash: (stream_id, topic) => {
+        return shared_hash_util.by_stream_topic_uri(
+            stream_id,
+            topic,
+            stream_data.maybe_get_stream_name,
+        );
+    },
 
     // settings
     should_translate_emoticons: () => user_settings.translate_emoticons,

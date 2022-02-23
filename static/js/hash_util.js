@@ -4,6 +4,7 @@ import {$t_html} from "./i18n";
 import * as people from "./people";
 import * as stream_data from "./stream_data";
 import * as ui_report from "./ui_report";
+import * as shared_hash_util from "../shared/js/hash_util";
 
 export function get_hash_category(hash) {
     // given "#streams/subscribed", returns "streams"
@@ -30,20 +31,6 @@ export function get_current_hash_section() {
     return get_hash_section(window.location.hash);
 }
 
-const hashReplacements = new Map([
-    ["%", "."],
-    ["(", ".28"],
-    [")", ".29"],
-    [".", ".2E"],
-]);
-
-// Some browsers zealously URI-decode the contents of
-// window.location.hash.  So we hide our URI-encoding
-// by replacing % with . (like MediaWiki).
-export function encodeHashComponent(str) {
-    return encodeURIComponent(str).replace(/[%().]/g, (matched) => hashReplacements.get(matched));
-}
-
 export function build_reload_url() {
     let hash = window.location.hash;
     if (hash.length !== 0 && hash[0] === "#") {
@@ -64,15 +51,7 @@ export function encode_operand(operator, operand) {
         return encode_stream_name(operand);
     }
 
-    return encodeHashComponent(operand);
-}
-
-export function encode_stream_id(stream_id) {
-    // stream_data appends the stream name, but it does not do the
-    // URI encoding piece
-    const slug = stream_data.id_to_slug(stream_id);
-
-    return encodeHashComponent(slug);
+    return shared_hash_util.encodeHashComponent(operand);
 }
 
 export function encode_stream_name(operand) {
@@ -80,7 +59,7 @@ export function encode_stream_name(operand) {
     // URI encoding piece
     operand = stream_data.name_to_slug(operand);
 
-    return encodeHashComponent(operand);
+    return shared_hash_util.encodeHashComponent(operand);
 }
 
 export function decodeHashComponent(str) {
@@ -120,14 +99,6 @@ export function decode_operand(operator, operand) {
     return operand;
 }
 
-export function by_stream_uri(stream_id) {
-    return "#narrow/stream/" + encode_stream_id(stream_id);
-}
-
-export function by_stream_topic_uri(stream_id, topic) {
-    return "#narrow/stream/" + encode_stream_id(stream_id) + "/topic/" + encodeHashComponent(topic);
-}
-
 // Encodes an operator list into the
 // corresponding hash: the # component
 // of the narrow URL
@@ -146,7 +117,7 @@ export function operators_to_hash(operators) {
             hash +=
                 "/" +
                 sign +
-                encodeHashComponent(operator) +
+                shared_hash_util.encodeHashComponent(operator) +
                 "/" +
                 encode_operand(operator, operand);
         }
@@ -180,17 +151,25 @@ export function by_conversation_and_time_uri(message) {
         "/" +
         window.location.pathname.split("/")[1];
 
-    const suffix = "/near/" + encodeHashComponent(message.id);
+    const suffix = "/near/" + shared_hash_util.encodeHashComponent(message.id);
 
     if (message.type === "stream") {
-        return absolute_url + by_stream_topic_uri(message.stream_id, message.topic) + suffix;
+        return (
+            absolute_url +
+            shared_hash_util.by_stream_topic_uri(
+                message.stream_id,
+                message.topic,
+                stream_data.maybe_get_stream_name,
+            ) +
+            suffix
+        );
     }
 
     return absolute_url + people.pm_perma_link(message) + suffix;
 }
 
 export function stream_edit_uri(sub) {
-    const hash = `#streams/${sub.stream_id}/${encodeHashComponent(sub.name)}`;
+    const hash = `#streams/${sub.stream_id}/${shared_hash_util.encodeHashComponent(sub.name)}`;
     return hash;
 }
 

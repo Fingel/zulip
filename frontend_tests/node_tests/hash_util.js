@@ -13,6 +13,7 @@ const ui_report = mock_esm("../../static/js/ui_report", {
     },
 });
 
+const shared_hash_util = require("../../static/shared/js/hash_util");
 const hash_util = zrequire("hash_util");
 const stream_data = zrequire("stream_data");
 const people = zrequire("people");
@@ -35,7 +36,7 @@ stream_data.add_sub(frontend);
 run_test("hash_util", () => {
     // Test encodeHashComponent
     const str = "https://www.zulipexample.com";
-    const result1 = hash_util.encodeHashComponent(str);
+    const result1 = shared_hash_util.encodeHashComponent(str);
     assert.equal(result1, "https.3A.2F.2Fwww.2Ezulipexample.2Ecom");
 
     // Test decodeHashComponent

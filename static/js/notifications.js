@@ -6,7 +6,7 @@ import * as alert_words from "./alert_words";
 import * as blueslip from "./blueslip";
 import * as channel from "./channel";
 import * as favicon from "./favicon";
-import * as hash_util from "./hash_util";
+import * as shared_hash_util from "../shared/js/hash_util";
 import {$t} from "./i18n";
 import * as message_lists from "./message_lists";
 import * as message_store from "./message_store";
@@ -652,9 +652,10 @@ export function notify_local_mixes(messages, need_user_to_scroll) {
 function get_above_composebox_narrow_url(message) {
     let above_composebox_narrow_url;
     if (message.type === "stream") {
-        above_composebox_narrow_url = hash_util.by_stream_topic_uri(
+        above_composebox_narrow_url = shared_hash_util.by_stream_topic_uri(
             message.stream_id,
             message.topic,
+            stream_data.maybe_get_stream_name,
         );
     } else {
         above_composebox_narrow_url = message.pm_with_url;

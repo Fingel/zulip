@@ -20,6 +20,7 @@ import {media_breakpoints_num} from "./css_variables";
 import * as dark_theme from "./dark_theme";
 import * as emoji_picker from "./emoji_picker";
 import * as hash_util from "./hash_util";
+import * as shared_hash_util from "../shared/js/hash_util";
 import * as hotspots from "./hotspots";
 import * as message_edit from "./message_edit";
 import * as message_flags from "./message_flags";
@@ -39,6 +40,7 @@ import * as rows from "./rows";
 import * as server_events from "./server_events";
 import * as settings_panel_menu from "./settings_panel_menu";
 import * as settings_toggle from "./settings_toggle";
+import * as stream_data from "./stream_data";
 import * as stream_list from "./stream_list";
 import * as stream_popover from "./stream_popover";
 import * as topic_list from "./topic_list";
@@ -244,7 +246,9 @@ export function initialize() {
         // so we re-encode the hash.
         const stream_id = Number.parseInt($(this).attr("data-stream-id"), 10);
         if (stream_id) {
-            browser_history.go_to_location(hash_util.by_stream_uri(stream_id));
+            browser_history.go_to_location(
+                shared_hash_util.by_stream_uri(stream_id, stream_data.maybe_get_stream_name),
+            );
             return;
         }
         window.location.href = $(this).attr("href");

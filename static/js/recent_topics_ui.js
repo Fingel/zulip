@@ -5,7 +5,7 @@ import render_recent_topics_filters from "../templates/recent_topics_filters.hbs
 import render_recent_topics_body from "../templates/recent_topics_table.hbs";
 
 import * as compose_closed_ui from "./compose_closed_ui";
-import * as hash_util from "./hash_util";
+import * as shared_hash_util from "../shared/js/hash_util";
 import {$t} from "./i18n";
 import * as ListWidget from "./list_widget";
 import {localstorage} from "./localstorage";
@@ -286,13 +286,17 @@ function format_topic(topic_data) {
         stream_color: stream_info.color,
         invite_only: stream_info.invite_only,
         is_web_public: stream_info.is_web_public,
-        stream_url: hash_util.by_stream_uri(stream_id),
+        stream_url: shared_hash_util.by_stream_uri(stream_id, stream_data.maybe_get_stream_name),
 
         topic,
         topic_key: get_topic_key(stream_id, topic),
         unread_count,
         last_msg_time,
-        topic_url: hash_util.by_stream_topic_uri(stream_id, topic),
+        topic_url: shared_hash_util.by_stream_topic_uri(
+            stream_id,
+            topic,
+            stream_data.maybe_get_stream_name,
+        ),
         senders: senders_info,
         other_senders_count: Math.max(0, all_senders.length - MAX_AVATAR),
         other_sender_names,
